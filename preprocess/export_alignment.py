@@ -46,7 +46,9 @@ def dump_romp_estimates(romp_output_dir, dump_path, scene=None):
         for file in sorted(files):
             if file.endswith('npz'):
                 cur_res = np.load(os.path.join(cur, file), allow_pickle=True)['results']
-                assert len(cur_res) == 1
+                #assert len(cur_res) == 1
+                if len(cur_res)>1:
+                    print(str(file),": more than two smpls")
                 cur_res = cur_res[0]
                 vibe_estimates['verts'].append(cur_res['verts'])
                 vibe_estimates['joints3d'].append(cur_res['j3d_all54'])
@@ -124,6 +126,8 @@ def solve_scale(joints_world, cap, plane_model):
         s = right / coe
         if s > 0:
             scales.append(s)
+    if len(scales) == 0:
+        scales.append(1.0)
     return min(scales)
 
 
